@@ -30,7 +30,7 @@ class Scene2 extends Phaser.Scene {
     this.load.audio("coin", "assets/img-scene1/coin.mp3");
     this.load.audio("pain", "assets/img-scene1/pain.mp3");
 
-    this.load.image("ladder", "assets/img-scene1/ladder.png");
+    this.load.image("info1", "assets/img-scene1/info1.jpg");
   }
 
   create() {
@@ -212,23 +212,31 @@ class Scene2 extends Phaser.Scene {
 
     this.painSound.play();
     this.lifeText.setText("Vida: "+this.life);
-    //this.physics.pause();
-    this.player.setTint(0xff0000);
     this.player.anims.play("idle", true);
     this.bombs.children.iterate(function(child){
      this.bombs.remove(child, true);
     }, this);
 
     if(this.countBombs == 1) {
+      this.player.setTint(0xff0000);
+      this.physics.pause();
+      this.info = this.add.image(400, 440, "info1");
+      this.info.setScale(0.5);
+      this.info.inputEnabled = true;
+      this.info.events.onInputDown.add(listener, this);
 
     }
     return false;
   }
 
+  listener(){
+    this.info.setVisible(false);
+  }
+
   update(time, delta) {
     this.timer += delta;
-    while (this.timer > 5000) {
-      this.timer -= 5000;
+    while (this.timer > 2000) {
+      this.timer -= 2000;
       this.x =
         this.player.x < 400
           ? Phaser.Math.Between(400, 800)
