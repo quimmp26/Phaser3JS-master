@@ -7,7 +7,7 @@ class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map", "assets/img-scene1/map2.json");
+    this.load.tilemapTiledJSON("map", "assets/img-scene1/map3.json");
     this.load.spritesheet("tiles", "assets/img-scene1/tiles.png", {
       frameWidth: 70,
       frameHeight: 70,
@@ -29,18 +29,23 @@ class Scene2 extends Phaser.Scene {
     this.load.audio("music", "assets/img-scene1/gamemusic.mp3");
     this.load.audio("coin", "assets/img-scene1/coin.mp3");
     this.load.audio("pain", "assets/img-scene1/pain.mp3");
+
+    this.load.image("ladder", "assets/img-scene1/ladder.png");
   }
 
   create() {
-    this.score = 0;
+    this.armorPoints = 0;
+    this.life = 100;
     this.gameOver = false;
     this.timer = 0;
+    this.countBombs = 0;
 
+    //Add sounds
     this.music = this.sound.add("music", {loop: true});
     this.coin = this.sound.add("coin", {loop: false});
-    this.pain = this.sound.add("pain", {loop: false});
+    this.painSound = this.sound.add("pain", {loop: false});
 
-    //this.music = this.sound.add("music");
+    //Play music
     this.music.play();
 
     // Color de fondo
@@ -79,7 +84,6 @@ class Scene2 extends Phaser.Scene {
     this.coinLayer.setTileIndexCallback(17, this.collectCoin, this);
 
     //this.groundLayer.setTileIndexCallback(14, this.collectCoin, this);
-
     //this.coinLayer.setTileIndexCallback(17, this.damageCoin, this);
 
     // when the player overlaps with a tile with index 17, collectCoin
@@ -115,16 +119,31 @@ class Scene2 extends Phaser.Scene {
     // make the camera follow the player
     this.cameras.main.startFollow(this.player);
 
-    // this text will show the score
-    this.text = this.add.text(20, 20, "0", {
+    // this text will show the armorPoints
+    /*this.text = this.add.text(20, 20, "0", {
+      fontSize: "40px",
+      fill: "#000000",
+    });*/
+
+    //Pain points
+    this.painText = this.add.text(20, 20, "Dolor: 0", {
       fontSize: "40px",
       fill: "#000000",
     });
 
+    //Live points
+    this.lifeText = this.add.text(300, 20, "Vida: 100", {
+      fontSize: "40px",
+      fill: "#000000",
+    });
+
+
     // fix the text to the camera
-    this.text.setScrollFactor(0);
+    //this.text.setScrollFactor(0);
+    this.painText.setScrollFactor(0);
+    this.lifeText.setScrollFactor(0);
 
-
+    //Fix the armors in right-top screen inivisible
     this.armor05 = this.add.image(700, 30, "armor05");
     this.armor05.setScale(0.1).setDisplaySize(150,50).setVisible(false);
     this.armor05.setScrollFactor(0);
@@ -158,44 +177,51 @@ class Scene2 extends Phaser.Scene {
 
   collectCoin(sprite, tile) {
     this.coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    this.score += 10; // add 10 points to the score
+    this.armorPoints += 10; // add 10 points to the armorPoints
     this.coin.play();
-    this.text.setText(this.score); // set the text to show the current score
-    if(this.score === 10) {
+    //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
+    if(this.armorPoints === 10) {
       this.armor05.setVisible(true);
     }
-    else if(this.score === 20) {
+    else if(this.armorPoints === 20) {
       this.armor1.setVisible(true);
     }
-    else if(this.score === 30) {
-      this.armor1.setVisible(true);
-    }
-    else if(this.score === 40) {
+    else if(this.armorPoints === 30) {
       this.armor15.setVisible(true);
     }
-    else if(this.score === 50) {
+    else if(this.armorPoints === 40) {
       this.armor2.setVisible(true);
     }
-    else if(this.score === 60) {
+    else if(this.armorPoints === 50) {
       this.armor25.setVisible(true);
     }
-    else if(this.score === 70) {
+    else if(this.armorPoints === 60) {
       this.armor3.setVisible(true);
     }
     return false;
   }
 
   damageBomb(sprite, tile) {
+    this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
-    this.score -= 10;
-    this.pain.play();
-    this.text.setText(this.score);
+    if(this.armorPoints != 0){
+      this.armorPoints -= 10;
+    }else{
+      this.life -= 10;
+    }
+
+    this.painSound.play();
+    this.lifeText.setText("Vida: "+this.life);
     //this.physics.pause();
     this.player.setTint(0xff0000);
     this.player.anims.play("idle", true);
     this.bombs.children.iterate(function(child){
      this.bombs.remove(child, true);
     }, this);
+
+    if(this.countBombs == 1) {
+
+    }
     return false;
   }
 
