@@ -1,5 +1,6 @@
 import { chdir } from "process";
 import { isThisTypeNode } from "typescript";
+import Bootloader from "../Bootloader";
 
 class Scene2 extends Phaser.Scene {
   constructor() {
@@ -217,34 +218,41 @@ class Scene2 extends Phaser.Scene {
      this.bombs.remove(child, true);
     }, this);
 
+    //Show message
     if(this.countBombs == 1) {
       this.player.setTint(0xff0000);
-      this.physics.pause();
-      this.info = this.add.image(400, 440, "info1");
+      //this.physics.pause();
+      const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+      const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+      this.info = this.add.image(screenCenterX, screenCenterY, "info1");
+      this.info.setOrigin(0.5,0.5);
       this.info.setScale(0.5);
-      this.info.inputEnabled = true;
-      this.info.events.onInputDown.add(listener, this);
+      this.info.setInteractive();
+      this.info.on('pointerdown', this.resumeGame);
 
     }
     return false;
   }
 
-  listener(){
-    this.info.setVisible(false);
+  resumeGame(){
+    this.setVisible(false);
   }
+
 
   update(time, delta) {
     this.timer += delta;
     while (this.timer > 2000) {
       this.timer -= 2000;
-      this.x =
+      /*this.x =
         this.player.x < 400
           ? Phaser.Math.Between(400, 800)
-          : Phaser.Math.Between(0, 400);
+          : Phaser.Math.Between(0, 400);*/
 
+      this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
       this.bomb = this.bombs.create(this.x, 100, "bomb");
-      this.bomb.setBounce(1);
-      this.bomb.setCollideWorldBounds(true);
+      //this.bomb.setBounce(1);
+      this.physics.add.collider(this.groundLayer, this.bomb);
+      //this.bomb.setCollideWorldBounds(true);
       this.bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
       this.bomb.allowGravity = false;
     }
