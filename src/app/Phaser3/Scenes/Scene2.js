@@ -8,30 +8,30 @@ class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map", "assets/img-scene1/map3.json");
-    this.load.spritesheet("tiles", "assets/img-scene1/tiles.png", {
+    this.load.tilemapTiledJSON("map", "assets/scene2/json/map3.json");
+    this.load.spritesheet("tiles", "assets/scene2/img/tiles.png", {
       frameWidth: 70,
       frameHeight: 70,
     });
-    this.load.image("coin", "assets/img-scene1/coinGold.png");
+    this.load.image("coin", "assets/scene2/img/coinGold.png");
     this.load.atlas(
       "player",
-      "assets/img-scene1/player.png",
-      "assets/img-scene1/player.json"
+      "assets/scene2/img/player.png",
+      "assets/scene2/json/player.json"
     );
-    this.load.image("bomb", "assets/bomb.png");
-    this.load.image('armor05', "assets/armor/armor0,5.png");
-    this.load.image('armor1', "assets/armor/armor1.png");
-    this.load.image('armor15', "assets/armor/armor1,5.png");
-    this.load.image('armor2', "assets/armor/armor2.png");
-    this.load.image('armor25', "assets/armor/armor2,5.png");
-    this.load.image('armor3', "assets/armor/armor3.png");
+    this.load.image("bomb", "assets/scene2/img/bomb.png");
+    this.load.image('armor05', "assets/scene2/armor/armor0,5.png");
+    this.load.image('armor1', "assets/scene2/armor/armor1.png");
+    this.load.image('armor15', "assets/scene2/armor/armor1,5.png");
+    this.load.image('armor2', "assets/scene2/armor/armor2.png");
+    this.load.image('armor25', "assets/scene2/armor/armor2,5.png");
+    this.load.image('armor3', "assets/scene2/armor/armor3.png");
 
-    this.load.audio("music", "assets/img-scene1/gamemusic.mp3");
-    this.load.audio("coin", "assets/img-scene1/coin.mp3");
-    this.load.audio("pain", "assets/img-scene1/pain.mp3");
+    this.load.audio("music", "assets/scene2/sounds/gamemusic.mp3");
+    this.load.audio("coin", "assets/scene2/sounds/coin.mp3");
+    this.load.audio("pain", "assets/scene2/sounds/pain.mp3");
 
-    this.load.image("info1", "assets/img-scene1/info1.jpg");
+    this.load.image("info1", "assets/scene2/img/info1.jpg");
   }
 
   create() {
@@ -229,7 +229,6 @@ class Scene2 extends Phaser.Scene {
       this.info.setScale(0.5);
       this.info.setInteractive();
       this.info.on('pointerdown', this.resumeGame);
-
     }
     return false;
   }
