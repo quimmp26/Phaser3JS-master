@@ -1,3 +1,4 @@
+import { ThrowStmt } from "@angular/compiler";
 import { chdir } from "process";
 import { isThisTypeNode } from "typescript";
 import Bootloader from "../Bootloader";
@@ -31,7 +32,7 @@ class Scene2 extends Phaser.Scene {
     this.load.audio("coin", "assets/scene2/sounds/coin.mp3");
     this.load.audio("pain", "assets/scene2/sounds/pain.mp3");
 
-    this.load.image("info1", "assets/scene2/img/info1.jpg");
+    //this.load.image("info1", "assets/scene2/img/info1.jpg");
   }
 
   create() {
@@ -40,14 +41,15 @@ class Scene2 extends Phaser.Scene {
     this.gameOver = false;
     this.timer = 0;
     this.countBombs = 0;
+    this.resume = false;
 
     //Add sounds
-    this.music = this.sound.add("music", {loop: true});
+    //this.music = this.sound.add("music", {loop: true});
     this.coin = this.sound.add("coin", {loop: false});
     this.painSound = this.sound.add("pain", {loop: false});
 
     //Play music
-    this.music.play();
+    //this.music.play();
 
     // Color de fondo
     this.cameras.main.setBackgroundColor("#ccccff");
@@ -174,6 +176,8 @@ class Scene2 extends Phaser.Scene {
       null,
       this
     );
+
+
   }
 
   collectCoin(sprite, tile) {
@@ -220,26 +224,27 @@ class Scene2 extends Phaser.Scene {
 
     //Show message
     if(this.countBombs == 1) {
-      this.player.setTint(0xff0000);
-      //this.physics.pause();
+      this.scene.pause();
+      this.scene.launch('SceneMsg');
+      /*this.player.setTint(0xff0000);
       const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
       const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
       this.info = this.add.image(screenCenterX, screenCenterY, "info1");
       this.info.setOrigin(0.5,0.5);
       this.info.setScale(0.5);
       this.info.setInteractive();
-      this.info.on('pointerdown', this.resumeGame);
+      this.info.on('pointerdown', function(){
+        this.setVisible(false);
+      });*/
+
     }
     return false;
-  }
-
-  resumeGame(){
-    this.setVisible(false);
   }
 
 
   update(time, delta) {
     this.timer += delta;
+
     while (this.timer > 2000) {
       this.timer -= 2000;
       /*this.x =
@@ -272,6 +277,8 @@ class Scene2 extends Phaser.Scene {
     if (this.cursors.up.isDown && this.player.body.onFloor()) {
       this.player.body.setVelocityY(-550); //500
     }
+
+
   }
 }
 
