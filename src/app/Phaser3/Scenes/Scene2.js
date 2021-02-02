@@ -15,11 +15,19 @@ class Scene2 extends Phaser.Scene {
       frameHeight: 70,
     });
     this.load.image("coin", "assets/scene2/img/coinGold.png");
-    this.load.atlas(
+    /*this.load.atlas(
       "player",
       "assets/scene2/img/player.png",
       "assets/scene2/json/player.json"
     );
+*/
+    this.load.atlas(
+      "player",
+      "assets/scene2/img/obrero.png",
+      "assets/scene2/json/obrero.json"
+    );
+
+
     this.load.image("bomb", "assets/scene2/img/bomb.png");
     this.load.image('armor05', "assets/scene2/armor/armor0,5.png");
     this.load.image('armor1', "assets/scene2/armor/armor1.png");
@@ -177,6 +185,7 @@ class Scene2 extends Phaser.Scene {
       this
     );
 
+    this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
 
   }
 
@@ -259,7 +268,32 @@ class Scene2 extends Phaser.Scene {
       //this.bomb.setCollideWorldBounds(true);
       this.bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
       this.bomb.allowGravity = false;
+
+
+      // Dolor a distancia
+      this.damageDist = Phaser.Math.Distance.BetweenPoints(this.player, this.bomb);
+      console.log(this.damageDist);
+
+      this.graphic
+      .clear()
+      .strokeCircle(this.player.x, this.player.y, this.damageDist);
+
+      if(this.damageDist <= 200) {
+        this.time.addEvent({
+          delay: 2000,
+          callback: ()=>{
+            this.damageBomb();
+          },
+          loop: false
+      })
+
+      }
+
     }
+
+
+
+
 
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-200);
