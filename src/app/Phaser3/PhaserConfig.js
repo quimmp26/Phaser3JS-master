@@ -2,7 +2,8 @@ import Bootloader from './Bootloader';
 import MainScene from './Scenes/MainScene';
 import Scene1 from './Scenes/Scene1';
 import Scene2 from './Scenes/Scene2';
-import SceneMsg from './Scenes/SceneMsg';
+import SceneMsg1 from './Scenes/SceneMsg1';
+import SceneMsg2 from './Scenes/SceneMsg2';
 
 var config = {
   type: Phaser.AUTO,
@@ -15,7 +16,7 @@ var config = {
           debug: false
       }
   },
-  scene: [ Bootloader, Scene1, MainScene, Scene2, SceneMsg ]
+  scene: [ Bootloader, Scene1, MainScene, Scene2, SceneMsg1, SceneMsg2 ]
 };
 
 var game = new Phaser.Game(config);

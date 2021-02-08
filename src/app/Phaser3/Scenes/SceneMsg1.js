@@ -1,6 +1,6 @@
-class SceneMsg extends Phaser.Scene {
+class SceneMsg1 extends Phaser.Scene {
   constructor() {
-    super("SceneMsg");
+    super("SceneMsg1");
   }
 
   preload() {
@@ -25,4 +25,4 @@ class SceneMsg extends Phaser.Scene {
   }
 }
 
-export default SceneMsg;
+export default SceneMsg1;

@@ -4,3 +4,10 @@
   font-family: 'Press Start 2P', cursive;
   font-weight: bold;
 }
+
+@font-face {
+  font-family: 'Font1';
+  src: url('assets/fonts/pixel-font.ttf');
+  font-weight: 400;
+  font-weight: normal;
+}

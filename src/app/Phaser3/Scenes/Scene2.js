@@ -49,6 +49,7 @@ class Scene2 extends Phaser.Scene {
     this.gameOver = false;
     this.timer = 0;
     this.countBombs = 0;
+    this.countDistanceDamage = 0;
     this.resume = false;
 
     //Add sounds
@@ -84,7 +85,7 @@ class Scene2 extends Phaser.Scene {
     this.player = this.physics.add.sprite(260, 400, "player");
     //this.player.setBounce(0.2); // our player will bounce from items
     this.player.setCollideWorldBounds(true); // don't go out of the map
-    this.player.setScale(0.3, 0.3);
+    this.player.setScale(0.25, 0.25);
 
     // small fix to our player images, we resize the physics body object slightly
     this.player.body.setSize(this.player.width, this.player.height - 8);
@@ -137,16 +138,19 @@ class Scene2 extends Phaser.Scene {
       fill: "#000000",
     });*/
 
+
     //Pain points
     this.painText = this.add.text(20, 20, "Dolor: 0", {
       fontSize: "40px",
       fill: "#000000",
+      fontFamily: 'Font1',
     });
 
     //Live points
     this.lifeText = this.add.text(300, 20, "Vida: 100", {
       fontSize: "40px",
       fill: "#000000",
+      fontFamily: 'Font1',
     });
 
 
@@ -235,7 +239,7 @@ class Scene2 extends Phaser.Scene {
     //Show message
     if(this.countBombs == 1) {
       this.scene.pause();
-      this.scene.launch('SceneMsg');
+      this.scene.launch('SceneMsg1');
       /*this.player.setTint(0xff0000);
       const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
       const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
@@ -275,26 +279,48 @@ class Scene2 extends Phaser.Scene {
       this.damageDist = Phaser.Math.Distance.BetweenPoints(this.player, this.bomb);
       console.log(this.damageDist);
 
-      this.graphic
+      /*this.graphic
       .clear()
-      .strokeCircle(this.player.x, this.player.y, this.damageDist);
+      .strokeCircle(this.player.x, this.player.y, this.damageDist);*/
 
       if(this.damageDist <= 200) {
+        this.countDistanceDamage++;
         this.time.addEvent({
           delay: 2000,
           callback: ()=>{
             this.damageBomb();
+            if(this.countDistanceDamage == 1){
+              this.scene.pause();
+              this.scene.launch('SceneMsg2');
+            }
           },
           loop: false
-      })
+        })
 
       }
 
     }
 
 
-
-
+    if(this.life <= 0) {
+      this.gameOver = true;
+      this.physics.pause();
+      this.player.setTint(0xff0000);
+      this.player.anims.play('idle', true);
+      this.scoreText = this.add.text(130, 250, "Game Over", {
+        fontSize: "100px",
+        fill: "#000000",
+        fontFamily: 'Font1',
+      });
+      this.scoreText.setScrollFactor(0);
+      this.time.addEvent({
+        delay: 2000,
+        callback: ()=>{
+          this.scene.start('Scene2');
+        },
+        loop: false
+      })
+    }
 
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-200);
