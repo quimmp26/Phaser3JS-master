@@ -84,6 +84,7 @@ class Scene2 extends Phaser.Scene {
     this.player = this.physics.add.sprite(260, 400, "player");
     //this.player.setBounce(0.2); // our player will bounce from items
     this.player.setCollideWorldBounds(true); // don't go out of the map
+    this.player.setScale(0.3, 0.3);
 
     // small fix to our player images, we resize the physics body object slightly
     this.player.body.setSize(this.player.width, this.player.height - 8);
@@ -107,7 +108,7 @@ class Scene2 extends Phaser.Scene {
       frames: this.anims.generateFrameNames("player", {
         prefix: "p1_walk",
         start: 1,
-        end: 11,
+        end: 8,
         zeroPad: 2,
       }),
       frameRate: 10,
