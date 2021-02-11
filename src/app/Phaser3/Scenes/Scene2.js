@@ -46,6 +46,7 @@ class Scene2 extends Phaser.Scene {
   create() {
     this.armorPoints = 0;
     this.life = 100;
+    this.pain = 0;
     this.gameOver = false;
     this.timer = 0;
     this.countBombs = 0;
@@ -225,12 +226,17 @@ class Scene2 extends Phaser.Scene {
     //this.coinLayer.removeTileAt(tile.x, tile.y);
     if(this.armorPoints != 0){
       this.armorPoints -= 10;
+      const randompain = this.pain + (Math.floor(Math.random()*(10)));
+      this.pain = randompain;
     }else{
       this.life -= 10;
+      const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5));
+      this.pain =randompain;
     }
 
     this.painSound.play();
     this.lifeText.setText("Vida: "+this.life);
+    this.painText.setText("Dolor: "+this.pain);
     this.player.anims.play("idle", true);
     this.bombs.children.iterate(function(child){
      this.bombs.remove(child, true);
