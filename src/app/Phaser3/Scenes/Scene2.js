@@ -43,6 +43,10 @@ class Scene2 extends Phaser.Scene {
     //this.load.image("info1", "assets/scene2/img/info1.jpg");
   }
 
+  init(data) {
+    console.log('init', data);
+  }
+
   create() {
     this.armorPoints = 0;
     this.life = 100;
@@ -279,7 +283,6 @@ class Scene2 extends Phaser.Scene {
       //this.bomb.setCollideWorldBounds(true);
       this.bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
       this.bomb.allowGravity = false;
-
 
       // Dolor a distancia
       this.damageDist = Phaser.Math.Distance.BetweenPoints(this.player, this.bomb);
