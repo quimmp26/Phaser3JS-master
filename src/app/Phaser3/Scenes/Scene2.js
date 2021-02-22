@@ -9,12 +9,13 @@ class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map", "assets/scene2/json/map3.json");
+    this.load.tilemapTiledJSON("map", "assets/scene2/json/scene2.json");
     this.load.spritesheet("tiles", "assets/scene2/img/tiles.png", {
       frameWidth: 70,
       frameHeight: 70,
     });
     this.load.image("coin", "assets/scene2/img/coinGold.png");
+    this.load.image("nail", "assets/scene2/img/nail2.png");
     /*this.load.atlas(
       "player",
       "assets/scene2/img/player.png",
@@ -85,6 +86,9 @@ class Scene2 extends Phaser.Scene {
     // add coins as tiles
     this.coinLayer = this.map.createDynamicLayer("Coins", this.coinTiles, 0, 0);
 
+    this.nailTiles = this.map.addTilesetImage("nail");
+    this.nailLayer = this.map.createDynamicLayer("Nails", this.nailTiles, 0, 0);
+
     // create the player sprite
     this.player = this.physics.add.sprite(260, 400, "player");
     //this.player.setBounce(0.2); // our player will bounce from items
@@ -99,6 +103,7 @@ class Scene2 extends Phaser.Scene {
 
     //this.physics.add.overlap(this.player, this.coinTiles, this.collectCoin, null, this);
     this.coinLayer.setTileIndexCallback(17, this.collectCoin, this);
+    this.nailLayer.setTileIndexCallback(18, this.collisionNail, this);
 
     //this.groundLayer.setTileIndexCallback(14, this.collectCoin, this);
     //this.coinLayer.setTileIndexCallback(17, this.damageCoin, this);
@@ -106,6 +111,9 @@ class Scene2 extends Phaser.Scene {
     // when the player overlaps with a tile with index 17, collectCoin
     // will be called
     this.physics.add.overlap(this.player, this.coinLayer);
+    // when the player overlaps with a tile with index 18, collisionNail
+    // will be called
+    this.physics.add.overlap(this.player, this.nailLayer);
 
     // player walk animation
     this.anims.create({
@@ -222,6 +230,10 @@ class Scene2 extends Phaser.Scene {
       this.armor3.setVisible(true);
     }
     return false;
+  }
+
+  collisionNail() {
+    console.log("nail collisioned!");
   }
 
   damageBomb(sprite, tile) {
