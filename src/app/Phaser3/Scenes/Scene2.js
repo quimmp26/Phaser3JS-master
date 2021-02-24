@@ -30,12 +30,15 @@ class Scene2 extends Phaser.Scene {
 
 
     this.load.image("bomb", "assets/scene2/img/bomb.png");
-    this.load.image('armor05', "assets/scene2/armor/armor0,5.png");
+    /*this.load.image('armor05', "assets/scene2/armor/armor0,5.png");
     this.load.image('armor1', "assets/scene2/armor/armor1.png");
     this.load.image('armor15', "assets/scene2/armor/armor1,5.png");
     this.load.image('armor2', "assets/scene2/armor/armor2.png");
     this.load.image('armor25', "assets/scene2/armor/armor2,5.png");
-    this.load.image('armor3', "assets/scene2/armor/armor3.png");
+    this.load.image('armor3', "assets/scene2/armor/armor3.png");*/
+    this.load.image('boots', "assets/scene2/epis/boots.png");
+    this.load.image('helmet', "assets/scene2/epis/helmet.png");
+    this.load.image('vest', "assets/scene2/epis/vest.png");
 
     this.load.audio("music", "assets/scene2/sounds/gamemusic.mp3");
     this.load.audio("coin", "assets/scene2/sounds/coin.mp3");
@@ -174,7 +177,7 @@ class Scene2 extends Phaser.Scene {
     this.lifeText.setScrollFactor(0);
 
     //Fix the armors in right-top screen inivisible
-    this.armor05 = this.add.image(700, 30, "armor05");
+    /*this.armor05 = this.add.image(700, 30, "armor05");
     this.armor05.setScale(0.1).setDisplaySize(150,50).setVisible(false);
     this.armor05.setScrollFactor(0);
     this.armor1 = this.add.image(700, 30, "armor1");
@@ -191,7 +194,21 @@ class Scene2 extends Phaser.Scene {
     this.armor25.setScrollFactor(0);
     this.armor3 = this.add.image(700, 30, "armor3");
     this.armor3.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor3.setScrollFactor(0);
+    this.armor3.setScrollFactor(0);*/
+
+    this.helmet = this.add.image(640, 40, "helmet");
+    this.helmet.setDisplaySize(50,50).setVisible(true);
+    this.helmet.setScrollFactor(0);
+
+    this.boots = this.add.image(700, 40, "boots");
+    this.boots.setDisplaySize(50,50).setVisible(true);
+    this.boots.setScrollFactor(0);
+
+    this.helmet = this.add.image(760, 40, "vest");
+    this.helmet.setDisplaySize(50,50).setVisible(true);
+    this.helmet.setScrollFactor(0);
+
+
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
