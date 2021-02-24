@@ -232,7 +232,8 @@ class Scene2 extends Phaser.Scene {
     return false;
   }
 
-  collisionNail() {
+  collisionNail(sprite, tile) {
+    this.nailLayer.removeTileAt(tile.x, tile.y);
     console.log("nail collisioned!");
   }
 
