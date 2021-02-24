@@ -49,8 +49,10 @@ class Scene2 extends Phaser.Scene {
   }
 
   create() {
-    this.armorPoints = 0;
     this.life = 100;
+    this.pain = 0;
+    this.helmet = false;
+    this.boots = false;
     this.gameOver = false;
     this.timer = 0;
     this.countBombs = 0;
@@ -208,26 +210,15 @@ class Scene2 extends Phaser.Scene {
 
   collectCoin(sprite, tile) {
     this.coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    this.armorPoints += 10; // add 10 points to the armorPoints
     this.coin.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
-    if(this.armorPoints === 10) {
+    if(this.helmet === false) {
       this.armor05.setVisible(true);
+      this.helmet = true;
     }
-    else if(this.armorPoints === 20) {
+    else if(this.boots === false) {
       this.armor1.setVisible(true);
-    }
-    else if(this.armorPoints === 30) {
-      this.armor15.setVisible(true);
-    }
-    else if(this.armorPoints === 40) {
-      this.armor2.setVisible(true);
-    }
-    else if(this.armorPoints === 50) {
-      this.armor25.setVisible(true);
-    }
-    else if(this.armorPoints === 60) {
-      this.armor3.setVisible(true);
+      this.boots = true;
     }
     return false;
   }
@@ -240,14 +231,19 @@ class Scene2 extends Phaser.Scene {
   damageBomb(sprite, tile) {
     this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
-    if(this.armorPoints != 0){
-      this.armorPoints -= 10;
-    }else{
+    if(this.helmet == true){ // if you have 1 item
+      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
+      this.pain = randompain;
+      this.life -= 5;
+    } else {
       this.life -= 10;
+      const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
+      this.pain =randompain;
     }
 
     this.painSound.play();
     this.lifeText.setText("Vida: "+this.life);
+    this.painText.setText("Dolor: "+this.pain);
     this.player.anims.play("idle", true);
     this.bombs.children.iterate(function(child){
      this.bombs.remove(child, true);
@@ -319,6 +315,26 @@ class Scene2 extends Phaser.Scene {
 
 
     if(this.life <= 0) {
+      this.gameOver = true;
+      this.physics.pause();
+      this.player.setTint(0xff0000);
+      this.player.anims.play('idle', true);
+      this.scoreText = this.add.text(130, 250, "Game Over", {
+        fontSize: "100px",
+        fill: "#000000",
+        fontFamily: 'Font1',
+      });
+      this.scoreText.setScrollFactor(0);
+      this.time.addEvent({
+        delay: 2000,
+        callback: ()=>{
+          this.scene.start('Scene2');
+        },
+        loop: false
+      })
+    }
+
+    if(this.pain >= 100) {
       this.gameOver = true;
       this.physics.pause();
       this.player.setTint(0xff0000);
