@@ -16,26 +16,16 @@ class Scene2 extends Phaser.Scene {
     });
     this.load.image("coin", "assets/scene2/img/coinGold.png");
     this.load.image("nail", "assets/scene2/img/nail2.png");
-    /*this.load.atlas(
-      "player",
-      "assets/scene2/img/player.png",
-      "assets/scene2/json/player.json"
-    );
-*/
     this.load.atlas(
       "player",
       "assets/scene2/img/obrero.png",
       "assets/scene2/json/obrero.json"
     );
 
+    this.load.image("play", "assets/scene2/img/play.png");
+    this.load.image("stop", "assets/scene2/img/stop.png");
 
     this.load.image("bomb", "assets/scene2/img/bomb.png");
-    /*this.load.image('armor05', "assets/scene2/armor/armor0,5.png");
-    this.load.image('armor1', "assets/scene2/armor/armor1.png");
-    this.load.image('armor15', "assets/scene2/armor/armor1,5.png");
-    this.load.image('armor2', "assets/scene2/armor/armor2.png");
-    this.load.image('armor25', "assets/scene2/armor/armor2,5.png");
-    this.load.image('armor3', "assets/scene2/armor/armor3.png");*/
     this.load.image('boots', "assets/scene2/epis/boots.png");
     this.load.image('helmet', "assets/scene2/epis/helmet.png");
     this.load.image('vest', "assets/scene2/epis/vest.png");
@@ -64,6 +54,8 @@ class Scene2 extends Phaser.Scene {
     this.haveVest = false;
     this.gameOver = false;
     this.resume = false;
+
+    this.isPaused = false;
 
     //Add sounds
     //this.music = this.sound.add("music", {loop: true});
@@ -129,8 +121,7 @@ class Scene2 extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.helmetLayer);
     this.physics.add.overlap(this.player, this.bootsLayer);
     this.physics.add.overlap(this.player, this.vestLayer);
-    // when the player overlaps with a tile with index 18, collisionNail
-    // will be called
+
 
     // player walk animation
     this.anims.create({
@@ -182,31 +173,20 @@ class Scene2 extends Phaser.Scene {
       fontFamily: 'Font1',
     });
 
+    //Play resume btns
+    this.btnPlay = this.add.image(750, 30, 'stop').setOrigin(0.5, 0.5).setDisplaySize(40, 40);
+    this.btnPlay.setInteractive();
+    this.btnPlay.on('pointerdown', () => {
+      this.scene.pause();
+      this.scene.launch('PauseScene');
+    });
 
     // fix the text to the camera
     //this.text.setScrollFactor(0);
     this.painText.setScrollFactor(0);
     this.lifeText.setScrollFactor(0);
+    this.btnPlay.setScrollFactor(0);
 
-    //Fix the armors in right-top screen inivisible
-    /*this.armor05 = this.add.image(700, 30, "armor05");
-    this.armor05.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor05.setScrollFactor(0);
-    this.armor1 = this.add.image(700, 30, "armor1");
-    this.armor1.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor1.setScrollFactor(0);
-    this.armor15 = this.add.image(700, 30, "armor15");
-    this.armor15.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor15.setScrollFactor(0);
-    this.armor2 = this.add.image(700, 30, "armor2");
-    this.armor2.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor2.setScrollFactor(0);
-    this.armor25 = this.add.image(700, 30, "armor25");
-    this.armor25.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor25.setScrollFactor(0);
-    this.armor3 = this.add.image(700, 30, "armor3");
-    this.armor3.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor3.setScrollFactor(0);*/
 
     this.helmet = this.add.image(640, 40, "helmet");
     this.helmet.setDisplaySize(50,50).setVisible(false);
@@ -301,19 +281,10 @@ class Scene2 extends Phaser.Scene {
     if(this.countBombs == 1) {
       this.scene.pause();
       this.scene.launch('SceneMsg1');
-      /*this.player.setTint(0xff0000);
-      const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-      const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
-      this.info = this.add.image(screenCenterX, screenCenterY, "info1");
-      this.info.setOrigin(0.5,0.5);
-      this.info.setScale(0.5);
-      this.info.setInteractive();
-      this.info.on('pointerdown', function(){
-        this.setVisible(false);
-      });*/
-
     }
+
     return false;
+
   }
 
 
@@ -328,7 +299,7 @@ class Scene2 extends Phaser.Scene {
           : Phaser.Math.Between(0, 400);*/
 
       this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
-      this.bomb = this.bombs.create(this.x, 100, "bomb");
+      this.bomb = this.bombs.create(this.x, 0, "bomb");
       //this.bomb.setBounce(1);
       this.physics.add.collider(this.groundLayer, this.bomb);
       //this.bomb.setCollideWorldBounds(true);
@@ -352,6 +323,7 @@ class Scene2 extends Phaser.Scene {
             if(this.countDistanceDamage == 1){
               this.scene.pause();
               this.scene.launch('SceneMsg2');
+
             }
           },
           loop: false
@@ -401,7 +373,6 @@ class Scene2 extends Phaser.Scene {
         loop: false
       })
     }
-
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-200);
       this.player.anims.play("walk", true); // walk left
