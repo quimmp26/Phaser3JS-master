@@ -6,13 +6,22 @@ class PauseScene extends Phaser.Scene {
 
   preload() {
     this.load.image("pause", "assets/scene2/img/pause.gif");
+    this.load.image("play", "assets/scene2/img/play.png");
   }
 
   create(){
 
+    this.btnPlay = this.add.image(780, 20, 'play').setOrigin(0.5, 0.5).setDisplaySize(30, 30);
+    this.btnPlay.setInteractive();
+    this.btnPlay.on('pointerdown', () => {
+    this.scene.pause();
+      this.scene.resume('Scene2');
+      this.info.setVisible(false);
+    });
+
     this.info = this.add.image(400, 300, 'pause').setOrigin(0.5, 0.5).setScale(0.4);
     this.input.keyboard.on('keydown_R', this.resume, this);
-    this.input.keyboard.on('keydown_ESC', this.menu, this);
+    this.input.keyboard.on('keydown_ESC', this.restart, this);
 
   }
 
@@ -21,11 +30,12 @@ class PauseScene extends Phaser.Scene {
     this.info.setVisible(false);
   }
 
-  menu() {
+  restart() {
     this.info.setVisible(false);
-    this.scene.stop('Scene2');
-    this.scene.launch('ConfigScene');
+    this.scene.start('Scene2');
   }
+
+
 
 
   update(time, delta) {

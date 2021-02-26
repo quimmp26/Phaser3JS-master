@@ -174,7 +174,7 @@ class Scene2 extends Phaser.Scene {
     });
 
     //Play resume btns
-    this.btnPlay = this.add.image(750, 30, 'stop').setOrigin(0.5, 0.5).setDisplaySize(40, 40);
+    this.btnPlay = this.add.image(780, 20, 'play').setOrigin(0.5, 0.5).setDisplaySize(30, 30);
     this.btnPlay.setInteractive();
     this.btnPlay.on('pointerdown', () => {
       this.scene.pause();
@@ -260,6 +260,16 @@ class Scene2 extends Phaser.Scene {
     this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
     if(this.haveHelmet == true){ // if you have 1 item
+      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
+      this.pain = randompain;
+      this.life -= 5;
+    } else {
+      this.life -= 10;
+      const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
+      this.pain =randompain;
+    }
+
+    if(this.haveVest == true){ // if you have 1 item
       const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
       this.pain = randompain;
       this.life -= 5;
