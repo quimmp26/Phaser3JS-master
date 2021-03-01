@@ -9,7 +9,7 @@ class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map", "assets/scene2/json/scene2.json");
+    this.load.tilemapTiledJSON("map", "assets/scene2/json/scene1.json");
     this.load.spritesheet("tiles", "assets/scene2/img/tiles.png", {
       frameWidth: 70,
       frameHeight: 70,
@@ -54,12 +54,15 @@ class Scene2 extends Phaser.Scene {
   create() {
     this.life = 100;
     this.pain = 0;
-    this.helmet = false;
-    this.boots = false;
-    this.gameOver = false;
+
     this.timer = 0;
     this.countBombs = 0;
     this.countDistanceDamage = 0;
+
+    this.haveHelmet = false;
+    this.haveBoots = false;
+    this.haveVest = false;
+    this.gameOver = false;
     this.resume = false;
 
     //Add sounds
@@ -87,12 +90,19 @@ class Scene2 extends Phaser.Scene {
     this.physics.world.bounds.height = this.groundLayer.height;
 
     // coin image used as tileset
-    this.coinTiles = this.map.addTilesetImage("coin");
+    this.helmetTiles = this.map.addTilesetImage("helmet");
     // add coins as tiles
-    this.coinLayer = this.map.createDynamicLayer("Coins", this.coinTiles, 0, 0);
+    this.helmetLayer = this.map.createDynamicLayer("Helmet", this.helmetTiles, 0, 0);
 
-    this.nailTiles = this.map.addTilesetImage("nail");
-    this.nailLayer = this.map.createDynamicLayer("Nails", this.nailTiles, 0, 0);
+    // coin image used as tileset
+    this.bootsTiles = this.map.addTilesetImage("boots");
+    // add coins as tiles
+    this.bootsLayer = this.map.createDynamicLayer("Boots", this.bootsTiles, 0, 0);
+
+    // coin image used as tileset
+    this.vestTiles = this.map.addTilesetImage("vest");
+    // add coins as tiles
+    this.vestLayer = this.map.createDynamicLayer("Vest", this.vestTiles, 0, 0);
 
     // create the player sprite
     this.player = this.physics.add.sprite(260, 400, "player");
@@ -107,18 +117,20 @@ class Scene2 extends Phaser.Scene {
     this.physics.add.collider(this.groundLayer, this.player);
 
     //this.physics.add.overlap(this.player, this.coinTiles, this.collectCoin, null, this);
-    this.coinLayer.setTileIndexCallback(17, this.collectCoin, this);
-    this.nailLayer.setTileIndexCallback(18, this.collisionNail, this);
+    this.helmetLayer.setTileIndexCallback(17, this.collectHelmet, this);
+    this.bootsLayer.setTileIndexCallback(18, this.collectBoots, this);
+    this.vestLayer.setTileIndexCallback(19, this.collectVest, this);
 
     //this.groundLayer.setTileIndexCallback(14, this.collectCoin, this);
     //this.coinLayer.setTileIndexCallback(17, this.damageCoin, this);
 
     // when the player overlaps with a tile with index 17, collectCoin
     // will be called
-    this.physics.add.overlap(this.player, this.coinLayer);
+    this.physics.add.overlap(this.player, this.helmetLayer);
+    this.physics.add.overlap(this.player, this.bootsLayer);
+    this.physics.add.overlap(this.player, this.vestLayer);
     // when the player overlaps with a tile with index 18, collisionNail
     // will be called
-    this.physics.add.overlap(this.player, this.nailLayer);
 
     // player walk animation
     this.anims.create({
@@ -197,16 +209,16 @@ class Scene2 extends Phaser.Scene {
     this.armor3.setScrollFactor(0);*/
 
     this.helmet = this.add.image(640, 40, "helmet");
-    this.helmet.setDisplaySize(50,50).setVisible(true);
+    this.helmet.setDisplaySize(50,50).setVisible(false);
     this.helmet.setScrollFactor(0);
 
     this.boots = this.add.image(700, 40, "boots");
-    this.boots.setDisplaySize(50,50).setVisible(true);
+    this.boots.setDisplaySize(50,50).setVisible(false);
     this.boots.setScrollFactor(0);
 
-    this.helmet = this.add.image(760, 40, "vest");
-    this.helmet.setDisplaySize(50,50).setVisible(true);
-    this.helmet.setScrollFactor(0);
+    this.vest = this.add.image(760, 40, "vest");
+    this.vest.setDisplaySize(50,50).setVisible(false);
+    this.vest.setScrollFactor(0);
 
 
 
@@ -225,17 +237,36 @@ class Scene2 extends Phaser.Scene {
 
   }
 
-  collectCoin(sprite, tile) {
-    this.coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
+  collectHelmet(sprite, tile) {
+    this.helmetLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
     this.coin.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
-    if(this.helmet === false) {
-      this.armor05.setVisible(true);
-      this.helmet = true;
+    if(this.haveHelmet === false) {
+      this.helmet.setVisible(true);
+      this.haveHelmet = true;
     }
-    else if(this.boots === false) {
-      this.armor1.setVisible(true);
-      this.boots = true;
+
+    return false;
+  }
+
+  collectBoots(sprite, tile) {
+    this.bootsLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
+    this.coin.play();
+    //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
+    if(this.haveBoots === false) {
+      this.boots.setVisible(true);
+      this.haveBoots = true;
+    }
+    return false;
+  }
+
+  collectVest(sprite, tile) {
+    this.vestLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
+    this.coin.play();
+    //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
+    if(this.haveVest === false) {
+      this.vest.setVisible(true);
+      this.haveVest = true;
     }
     return false;
   }
@@ -248,7 +279,7 @@ class Scene2 extends Phaser.Scene {
   damageBomb(sprite, tile) {
     this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
-    if(this.helmet == true){ // if you have 1 item
+    if(this.haveHelmet == true){ // if you have 1 item
       const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
       this.pain = randompain;
       this.life -= 5;
