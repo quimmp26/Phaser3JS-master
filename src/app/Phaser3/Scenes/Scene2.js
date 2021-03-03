@@ -268,19 +268,10 @@ class Scene2 extends Phaser.Scene {
 
     //Show message
     if(this.countBombs == 1) {
+      this.input.keyboard.removeAllKeys(false);
       this.scene.pause();
+      this.cursors = this.input.keyboard.createCursorKeys();
       this.scene.launch('SceneMsg1');
-      /*this.player.setTint(0xff0000);
-      const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-      const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
-      this.info = this.add.image(screenCenterX, screenCenterY, "info1");
-      this.info.setOrigin(0.5,0.5);
-      this.info.setScale(0.5);
-      this.info.setInteractive();
-      this.info.on('pointerdown', function(){
-        this.setVisible(false);
-      });*/
-
     }
     return false;
   }
@@ -319,7 +310,9 @@ class Scene2 extends Phaser.Scene {
           callback: ()=>{
             this.damageBomb();
             if(this.countDistanceDamage == 1){
+              this.input.keyboard.removeAllKeys(false);
               this.scene.pause();
+              this.cursors = this.input.keyboard.createCursorKeys();
               this.scene.launch('SceneMsg2');
             }
           },
