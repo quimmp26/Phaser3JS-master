@@ -243,7 +243,8 @@ class Scene2 extends Phaser.Scene {
     );
 
     for(var i = 0; i < 20; i++) {
-      this.nail = this.nails.create(this.x, 50, "nail")
+      const xspawn = Math.floor(Math.random()*(2500));
+      this.nail = this.nails.create(xspawn, 50, "nail")
       this.nail.setScale(0.3, 0.3);
       this.physics.add.collider(this.groundLayer, this.nail);
       console.log(i);
@@ -287,8 +288,9 @@ class Scene2 extends Phaser.Scene {
     return false;
   }
 
-  collisionNail(sprite, tile) {
+  collisionNail(sprite, nail) {
 
+    //
     if(this.haveBoots == true){ // if you have 1 item
       const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
       this.pain = randompain;
@@ -298,6 +300,13 @@ class Scene2 extends Phaser.Scene {
       const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
       this.pain =randompain;
     }
+
+    this.painSound.play();
+    this.lifeText.setText("Vida: "+this.life);
+    this.painText.setText("Dolor: "+this.pain);
+    this.player.anims.play("idle", true);
+
+    nail.disableBody(true, true);
 
     console.log("nail collisioned!");
   }
