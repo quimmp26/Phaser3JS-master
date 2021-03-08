@@ -27,6 +27,8 @@ class Scene2 extends Phaser.Scene {
     this.load.image("city", "assets/scene2/img/bg_city.png");
 
     this.load.image("bomb", "assets/scene2/img/bomb.png");
+    this.load.image("nail", "assets/scene2/img/nail2.png");
+
     this.load.image('boots', "assets/scene2/epis/boots.png");
     this.load.image('helmet', "assets/scene2/epis/helmet.png");
     this.load.image('vest', "assets/scene2/epis/vest.png");
@@ -216,6 +218,23 @@ class Scene2 extends Phaser.Scene {
       this
     );
 
+    this.nails = this.physics.add.group();
+    this.physics.add.collider(
+      this.player,
+      this.nails,
+      this.collisionNail,
+      null,
+      this
+    );
+
+    for(var i = 0; i < 20; i++) {
+      const xspawn = Math.floor(Math.random()*(2500));
+      this.nail = this.nails.create(xspawn, 50, "nail")
+      this.nail.setScale(0.3, 0.3);
+      this.physics.add.collider(this.groundLayer, this.nail);
+      console.log(i);
+    }
+
     this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
 
   }
@@ -263,8 +282,30 @@ class Scene2 extends Phaser.Scene {
     return false;
   }
 
-  collisionNail(sprite, tile) {
-    this.nailLayer.removeTileAt(tile.x, tile.y);
+  collisionNail(sprite, nail) {
+
+    //
+    if(this.haveBoots){ // if you have 1 item
+      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-10)
+      this.pain = randompain;
+      this.life -= 5;
+    } else if(this.haveVest) {
+      const randompain = this.pain + (Math.floor(Math.random()*(15))); //random value range(0-15)
+      this.pain = randompain;
+      this.life -= 7;
+    } else {
+      this.life -= 10;
+      const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
+      this.pain =randompain;
+    }
+
+    this.painSound.play();
+    this.lifeText.setText("Vida: "+this.life);
+    this.painText.setText("Dolor: "+this.pain);
+    this.player.anims.play("idle", true);
+
+    nail.disableBody(true, true);
+
     console.log("nail collisioned!");
   }
 
@@ -272,9 +313,13 @@ class Scene2 extends Phaser.Scene {
     this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
     if(this.haveHelmet == true){ // if you have 1 item
-      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
+      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-10)
       this.pain = randompain;
       this.life -= 5;
+    } else if(this.haveVest) {
+      const randompain = this.pain + (Math.floor(Math.random()*(15))); //random value range(0-15)
+      this.pain = randompain;
+      this.life -= 7;
     } else {
       this.life -= 10;
       const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
