@@ -285,10 +285,14 @@ class Scene2 extends Phaser.Scene {
   collisionNail(sprite, nail) {
 
     //
-    if(this.haveBoots == true){ // if you have 1 item
-      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
+    if(this.haveBoots){ // if you have 1 item
+      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-10)
       this.pain = randompain;
       this.life -= 5;
+    } else if(this.haveVest) {
+      const randompain = this.pain + (Math.floor(Math.random()*(15))); //random value range(0-15)
+      this.pain = randompain;
+      this.life -= 7;
     } else {
       this.life -= 10;
       const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
@@ -309,9 +313,13 @@ class Scene2 extends Phaser.Scene {
     this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
     if(this.haveHelmet == true){ // if you have 1 item
-      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
+      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-10)
       this.pain = randompain;
       this.life -= 5;
+    } else if(this.haveVest) {
+      const randompain = this.pain + (Math.floor(Math.random()*(15))); //random value range(0-15)
+      this.pain = randompain;
+      this.life -= 7;
     } else {
       this.life -= 10;
       const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
