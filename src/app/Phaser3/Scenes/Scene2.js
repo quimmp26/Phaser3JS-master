@@ -227,8 +227,8 @@ class Scene2 extends Phaser.Scene {
       this
     );
 
-    for(var i = 0; i < 20; i++) {
-      const xspawn = Math.floor(Math.random()*(2500));
+    for(var i = 0; i < 30; i++) {
+      const xspawn = Math.floor(Math.random()*(5100));
       this.nail = this.nails.create(xspawn, 50, "nail")
       this.nail.setScale(0.3, 0.3);
       this.physics.add.collider(this.groundLayer, this.nail);
