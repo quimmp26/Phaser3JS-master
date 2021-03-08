@@ -5,19 +5,20 @@ class SceneMsg2 extends Phaser.Scene {
 
   preload() {
     this.load.image("info2", "assets/scene2/img/info2.jpg");
+    this.load.image("play", "assets/scene2/img/play.png");
   }
 
   create(){
 
     this.info = this.add.image(400, 300, 'info2').setOrigin(0.5, 0.5).setScale(0.5);
 
-    this.input.on('pointerup', function (pointer) {
-
+    this.btnPlay = this.add.image(400, 300, 'play').setOrigin(0.5, 0.5).setDisplaySize(80, 80);
+    this.btnPlay.setInteractive();
+    this.btnPlay.on('pointerdown', () => {
       this.scene.resume('Scene2');
       this.info.setVisible(false);
-
-    }, this);
-
+      this.btnPlay.setVisible(false);
+    });
   }
 
   update(time, delta) {

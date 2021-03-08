@@ -9,33 +9,24 @@ class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map", "assets/scene2/json/scene1.json");
-    this.load.spritesheet("tiles", "assets/scene2/img/tiles.png", {
+    this.load.tilemapTiledJSON("map", "assets/scene2/json/Map5.json");
+    this.load.spritesheet("platforms", "assets/scene2/img/platforms.png", {
       frameWidth: 70,
       frameHeight: 70,
     });
-    this.load.image("coin", "assets/scene2/img/coinGold.png");
-    this.load.image("nail", "assets/scene2/img/nail2.png");
-    /*this.load.atlas(
-      "player",
-      "assets/scene2/img/player.png",
-      "assets/scene2/json/player.json"
-    );
-*/
+    this.load.image("coin", "assets/scene2/img/coin.png");
     this.load.atlas(
       "player",
       "assets/scene2/img/obrero.png",
       "assets/scene2/json/obrero.json"
     );
 
+    this.load.image("play", "assets/scene2/img/play.png");
+    this.load.image("stop", "assets/scene2/img/pause.png");
+
+    this.load.image("city", "assets/scene2/img/bg_city.png");
 
     this.load.image("bomb", "assets/scene2/img/bomb.png");
-    /*this.load.image('armor05', "assets/scene2/armor/armor0,5.png");
-    this.load.image('armor1', "assets/scene2/armor/armor1.png");
-    this.load.image('armor15', "assets/scene2/armor/armor1,5.png");
-    this.load.image('armor2', "assets/scene2/armor/armor2.png");
-    this.load.image('armor25', "assets/scene2/armor/armor2,5.png");
-    this.load.image('armor3', "assets/scene2/armor/armor3.png");*/
     this.load.image('boots', "assets/scene2/epis/boots.png");
     this.load.image('helmet', "assets/scene2/epis/helmet.png");
     this.load.image('vest', "assets/scene2/epis/vest.png");
@@ -65,6 +56,8 @@ class Scene2 extends Phaser.Scene {
     this.gameOver = false;
     this.resume = false;
 
+    this.isPaused = false;
+
     //Add sounds
     //this.music = this.sound.add("music", {loop: true});
     this.coin = this.sound.add("coin", {loop: false});
@@ -74,10 +67,13 @@ class Scene2 extends Phaser.Scene {
     //this.music.play();
 
     // Color de fondo
-    this.cameras.main.setBackgroundColor("#ccccff");
+    //this.cameras.main.setBackgroundColor("#ccccff");
+
+    this.mainGround = this.add.image(0, 0, "city").setOrigin(0).setDepth(0);
+    this.mainGround.setScrollFactor(0);
 
     this.map = this.make.tilemap({ key: "map" });
-    this.groundTiles = this.map.addTilesetImage("tiles");
+    this.groundTiles = this.map.addTilesetImage("platforms");
     this.groundLayer = this.map.createDynamicLayer(
       "World",
       this.groundTiles,
@@ -89,24 +85,21 @@ class Scene2 extends Phaser.Scene {
     this.physics.world.bounds.width = this.groundLayer.width;
     this.physics.world.bounds.height = this.groundLayer.height;
 
-    // coin image used as tileset
+
+    this.coinTiles = this.map.addTilesetImage("coin");
+    this.coinLayer = this.map.createDynamicLayer("Coin", this.coinTiles, 0, 0);
+
     this.helmetTiles = this.map.addTilesetImage("helmet");
-    // add coins as tiles
     this.helmetLayer = this.map.createDynamicLayer("Helmet", this.helmetTiles, 0, 0);
 
-    // coin image used as tileset
     this.bootsTiles = this.map.addTilesetImage("boots");
-    // add coins as tiles
     this.bootsLayer = this.map.createDynamicLayer("Boots", this.bootsTiles, 0, 0);
 
-    // coin image used as tileset
     this.vestTiles = this.map.addTilesetImage("vest");
-    // add coins as tiles
     this.vestLayer = this.map.createDynamicLayer("Vest", this.vestTiles, 0, 0);
 
     // create the player sprite
-    this.player = this.physics.add.sprite(260, 400, "player");
-    //this.player.setBounce(0.2); // our player will bounce from items
+    this.player = this.physics.add.sprite(10, 1000, "player");
     this.player.setCollideWorldBounds(true); // don't go out of the map
     this.player.setScale(0.25, 0.25);
 
@@ -117,20 +110,21 @@ class Scene2 extends Phaser.Scene {
     this.physics.add.collider(this.groundLayer, this.player);
 
     //this.physics.add.overlap(this.player, this.coinTiles, this.collectCoin, null, this);
-    this.helmetLayer.setTileIndexCallback(17, this.collectHelmet, this);
-    this.bootsLayer.setTileIndexCallback(18, this.collectBoots, this);
-    this.vestLayer.setTileIndexCallback(19, this.collectVest, this);
+    this.coinLayer.setTileIndexCallback(5, this.collectCoin, this);
+    this.helmetLayer.setTileIndexCallback(6, this.collectHelmet, this);
+    this.bootsLayer.setTileIndexCallback(7, this.collectBoots, this);
+    this.vestLayer.setTileIndexCallback(8, this.collectVest, this);
 
     //this.groundLayer.setTileIndexCallback(14, this.collectCoin, this);
     //this.coinLayer.setTileIndexCallback(17, this.damageCoin, this);
 
     // when the player overlaps with a tile with index 17, collectCoin
     // will be called
+    this.physics.add.overlap(this.player, this.coinLayer);
     this.physics.add.overlap(this.player, this.helmetLayer);
     this.physics.add.overlap(this.player, this.bootsLayer);
     this.physics.add.overlap(this.player, this.vestLayer);
-    // when the player overlaps with a tile with index 18, collisionNail
-    // will be called
+
 
     // player walk animation
     this.anims.create({
@@ -182,42 +176,31 @@ class Scene2 extends Phaser.Scene {
       fontFamily: 'Font1',
     });
 
+    //Play resume btns
+    this.btnPlay = this.add.image(780, 20, 'stop').setOrigin(0.5, 0.5).setDisplaySize(30, 30);
+    this.btnPlay.setInteractive();
+    this.btnPlay.on('pointerdown', () => {
+      this.scene.pause();
+      this.scene.launch('PauseScene');
+    });
 
     // fix the text to the camera
     //this.text.setScrollFactor(0);
     this.painText.setScrollFactor(0);
     this.lifeText.setScrollFactor(0);
+    this.btnPlay.setScrollFactor(0);
 
-    //Fix the armors in right-top screen inivisible
-    /*this.armor05 = this.add.image(700, 30, "armor05");
-    this.armor05.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor05.setScrollFactor(0);
-    this.armor1 = this.add.image(700, 30, "armor1");
-    this.armor1.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor1.setScrollFactor(0);
-    this.armor15 = this.add.image(700, 30, "armor15");
-    this.armor15.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor15.setScrollFactor(0);
-    this.armor2 = this.add.image(700, 30, "armor2");
-    this.armor2.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor2.setScrollFactor(0);
-    this.armor25 = this.add.image(700, 30, "armor25");
-    this.armor25.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor25.setScrollFactor(0);
-    this.armor3 = this.add.image(700, 30, "armor3");
-    this.armor3.setScale(0.1).setDisplaySize(150,50).setVisible(false);
-    this.armor3.setScrollFactor(0);*/
 
     this.helmet = this.add.image(640, 40, "helmet");
-    this.helmet.setDisplaySize(50,50).setVisible(false);
+    this.helmet.setVisible(false);
     this.helmet.setScrollFactor(0);
 
     this.boots = this.add.image(700, 40, "boots");
-    this.boots.setDisplaySize(50,50).setVisible(false);
+    this.boots.setVisible(false);
     this.boots.setScrollFactor(0);
 
     this.vest = this.add.image(760, 40, "vest");
-    this.vest.setDisplaySize(50,50).setVisible(false);
+    this.vest.setVisible(false);
     this.vest.setScrollFactor(0);
 
 
@@ -252,6 +235,15 @@ class Scene2 extends Phaser.Scene {
 
     this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
 
+  }
+
+  collectCoin(sprite, tile) {
+    this.coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
+    this.coin.play();
+    //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
+
+
+    return false;
   }
 
   collectHelmet(sprite, tile) {
@@ -324,6 +316,16 @@ class Scene2 extends Phaser.Scene {
       this.pain =randompain;
     }
 
+    if(this.haveVest == true){ // if you have 1 item
+      const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-15)
+      this.pain = randompain;
+      this.life -= 5;
+    } else {
+      this.life -= 10;
+      const randompain = this.pain + (Math.floor(Math.random()*(20 - 5) + 5)); //random value range (20-5)
+      this.pain =randompain;
+    }
+
     this.painSound.play();
     this.lifeText.setText("Vida: "+this.life);
     this.painText.setText("Dolor: "+this.pain);
@@ -339,7 +341,9 @@ class Scene2 extends Phaser.Scene {
       this.cursors = this.input.keyboard.createCursorKeys();
       this.scene.launch('SceneMsg1');
     }
+
     return false;
+
   }
 
 
@@ -354,7 +358,7 @@ class Scene2 extends Phaser.Scene {
           : Phaser.Math.Between(0, 400);*/
 
       this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
-      this.bomb = this.bombs.create(this.x, 100, "bomb");
+      this.bomb = this.bombs.create(this.x, 0, "bomb");
       //this.bomb.setBounce(1);
       this.physics.add.collider(this.groundLayer, this.bomb);
       //this.bomb.setCollideWorldBounds(true);
@@ -429,7 +433,6 @@ class Scene2 extends Phaser.Scene {
         loop: false
       })
     }
-
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-200);
       this.player.anims.play("walk", true); // walk left
@@ -444,7 +447,7 @@ class Scene2 extends Phaser.Scene {
     }
     // jump
     if (this.cursors.up.isDown && this.player.body.onFloor()) {
-      this.player.body.setVelocityY(-550); //500
+      this.player.body.setVelocityY(-600); //500
     }
 
 

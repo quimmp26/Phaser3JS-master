@@ -44,25 +44,13 @@ class ConfigScene extends Phaser.Scene {
       if(event.target.name === 'submitBtn'){
         name = this.getChildByName('name');
         group = this.getChildByName('format');
-        powerup1 = this.getChildByID('tool-1');
-        powerup2 = this.getChildByID('tool-2');
-        powerup3 = this.getChildByID('tool-3');
 
-        if (name.value !== '' && group.value !== '')
+
+        if (name.value !== '' && group.value !== '' && group.value !== 'Elige un equipo')
         {
-          if(powerup1.checked === true){
-            powerup = 'JUMP';
-          }else if(powerup2.checked === true){
-            powerup = 'MUSCLE';
-          }else if(powerup3.checked === true){
-            powerup = 'SPRINT';
-          }
             sceneOK = true;
             this.removeListener('click');
-
         }
-
-        console.log(powerup1.checked);
 
       }
 
@@ -73,7 +61,7 @@ class ConfigScene extends Phaser.Scene {
 
   update(time, delta) {
     if(sceneOK == true){
-      this.scene.start('Scene2', {player: name.value, group: group.value, powerup: powerup});
+      this.scene.start('Scene2', {player: name.value, group: group.value});
     }
   }
 }
