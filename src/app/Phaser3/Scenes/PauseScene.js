@@ -17,6 +17,7 @@ class PauseScene extends Phaser.Scene {
     this.scene.pause();
       this.scene.resume('Scene2');
       this.info.setVisible(false);
+      this.btnPlay.setVisible(false);
     });
 
     this.info = this.add.image(400, 300, 'pause').setOrigin(0.5, 0.5).setScale(0.4);
