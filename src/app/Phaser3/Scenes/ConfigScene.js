@@ -1,10 +1,6 @@
 var sceneOK = false;
 var name = '';
 var group = '';
-var powerup = '';
-var powerup1 = '';
-var powerup2 = '';
-var powerup3 = '';
 
 class ConfigScene extends Phaser.Scene {
 
@@ -19,7 +15,6 @@ class ConfigScene extends Phaser.Scene {
   }
 
   create() {
-
 
     this.add.text(50, 20, "CHOOSE YOUR CHARACTER ", {
       fontSize: "40px",
@@ -44,7 +39,6 @@ class ConfigScene extends Phaser.Scene {
       if(event.target.name === 'submitBtn'){
         name = this.getChildByName('name');
         group = this.getChildByName('format');
-
 
         if (name.value !== '' && group.value !== '' && group.value !== 'Elige un equipo')
         {
