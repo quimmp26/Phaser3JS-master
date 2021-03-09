@@ -36,6 +36,7 @@ class Scene2 extends Phaser.Scene {
     this.load.audio("music", "assets/scene2/sounds/gamemusic.mp3");
     this.load.audio("coin", "assets/scene2/sounds/coin.mp3");
     this.load.audio("pain", "assets/scene2/sounds/pain.mp3");
+    this.load.audio("item", "assets/scene2/sounds/items.mp3");
 
     //this.load.image("info1", "assets/scene2/img/info1.jpg");
   }
@@ -67,9 +68,10 @@ class Scene2 extends Phaser.Scene {
     this.isPaused = false;
 
     //Add sounds
-    //this.music = this.sound.add("music", {loop: true});
+    this.music = this.sound.add("music", {loop: true});
     this.coin = this.sound.add("coin", {loop: false});
     this.painSound = this.sound.add("pain", {loop: false});
+    this.item = this.sound.add("item", {loop: false});
 
     //Play music
     //this.music.play();
@@ -249,8 +251,8 @@ class Scene2 extends Phaser.Scene {
       this
     );
 
-    for(var i = 0; i < 20; i++) {
-      const xspawn = Math.floor(Math.random()*(2500));
+    for(var i = 0; i < 30; i++) {
+      const xspawn = Math.floor(Math.random()*(5100));
       this.nail = this.nails.create(xspawn, 50, "nail")
       this.nail.setScale(0.3, 0.3);
       this.physics.add.collider(this.groundLayer, this.nail);
@@ -271,7 +273,7 @@ class Scene2 extends Phaser.Scene {
 
   collectHelmet(sprite, tile) {
     this.helmetLayer.removeTileAt(tile.x, tile.y);
-    this.coin.play();
+    this.item.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
     if(this.haveHelmet === false) {
       this.helmet.setVisible(true);
@@ -282,7 +284,7 @@ class Scene2 extends Phaser.Scene {
 
   collectBoots(sprite, tile) {
     this.bootsLayer.removeTileAt(tile.x, tile.y);
-    this.coin.play();
+    this.item.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
     if(this.haveBoots === false) {
       this.boots.setVisible(true);
@@ -293,7 +295,7 @@ class Scene2 extends Phaser.Scene {
 
   collectVest(sprite, tile) {
     this.vestLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    this.coin.play();
+    this.item.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
     if(this.haveVest === false) {
       this.vest.setVisible(true);
@@ -379,8 +381,8 @@ class Scene2 extends Phaser.Scene {
   update(time, delta) {
     this.timer += delta;
 
-    while (this.timer > 2000) {
-      this.timer -= 2000;
+    while (this.timer > 3000) {
+      this.timer -= 3000;
 
       this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
       this.bomb = this.bombs.create(this.x, 0, "bomb");
