@@ -5,6 +5,7 @@ import SceneMsg1 from './Scenes/SceneMsg1';
 import SceneMsg2 from './Scenes/SceneMsg2';
 import ConfigScene from './Scenes/ConfigScene';
 import PauseScene from './Scenes/PauseScene';
+import EndScene from './Scenes/EndScene';
 
 var config = {
   type: Phaser.AUTO,
@@ -22,7 +23,7 @@ var config = {
           debug: false
       }
   },
-  scene: [ Bootloader, MainScene, Scene2, SceneMsg1, SceneMsg2, ConfigScene, PauseScene]
+  scene: [ Bootloader, MainScene, Scene2, SceneMsg1, SceneMsg2, ConfigScene, PauseScene, EndScene]
 };
 
 var game = new Phaser.Game(config);
