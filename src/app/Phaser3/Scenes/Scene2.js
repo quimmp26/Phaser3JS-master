@@ -36,21 +36,28 @@ class Scene2 extends Phaser.Scene {
     this.load.audio("music", "assets/scene2/sounds/gamemusic.mp3");
     this.load.audio("coin", "assets/scene2/sounds/coin.mp3");
     this.load.audio("pain", "assets/scene2/sounds/pain.mp3");
+    this.load.audio("item", "assets/scene2/sounds/items.mp3");
 
     //this.load.image("info1", "assets/scene2/img/info1.jpg");
   }
 
   init(data) {
+    this.name = data.player;
+    this.group = data.group;
     console.log('init', data);
   }
 
   create() {
     this.life = 100;
     this.pain = 0;
-
+    this.score = 0;
     this.timer = 0;
+
+    //IMPLEMENTAR 4 MISATGES AMB CONTADOR 1
     this.countBombs = 0;
-    this.countDistanceDamage = 0;
+    this.countBombsWithHelmet = 0;
+    this.countNails = 0;
+    this.countNailsWithBoots = 0;
 
     this.haveHelmet = false;
     this.haveBoots = false;
@@ -61,9 +68,10 @@ class Scene2 extends Phaser.Scene {
     this.isPaused = false;
 
     //Add sounds
-    //this.music = this.sound.add("music", {loop: true});
+    this.music = this.sound.add("music", {loop: true});
     this.coin = this.sound.add("coin", {loop: false});
     this.painSound = this.sound.add("pain", {loop: false});
+    this.item = this.sound.add("item", {loop: false});
 
     //Play music
     //this.music.play();
@@ -157,26 +165,43 @@ class Scene2 extends Phaser.Scene {
     // make the camera follow the player
     this.cameras.main.startFollow(this.player);
 
-    // this text will show the armorPoints
-    /*this.text = this.add.text(20, 20, "0", {
-      fontSize: "40px",
-      fill: "#000000",
-    });*/
-
+    // scoreText
+    this.scoreText = this.add.text(300, 20, "Puntuación: 0", {
+      fontSize: "20px",
+      fill: "#ffffff",
+      fontFamily: 'Font1',
+    });
 
     //Pain points
     this.painText = this.add.text(20, 20, "Dolor: 0", {
-      fontSize: "40px",
-      fill: "#000000",
+      fontSize: "20px",
+      fill: "#ffffff",
       fontFamily: 'Font1',
     });
 
     //Live points
-    this.lifeText = this.add.text(300, 20, "Vida: 100", {
-      fontSize: "40px",
-      fill: "#000000",
+    this.lifeText = this.add.text(160, 20, "Vida: 100", {
+      fontSize: "20px",
+      fill: "#ffffff",
       fontFamily: 'Font1',
     });
+
+    //Player name
+    this.playerName = this.add.text(600, 550, this.name, {
+      fontSize: "20px",
+      fill: "#ffffff",
+      fontFamily: 'Font1',
+    });
+
+    //Team name
+    this.groupName = this.add.text(600, 570, this.group, {
+      fontSize: "20px",
+      fill: "#ff0000",
+      fontFamily: 'Font1',
+    });
+
+
+
 
     //Play resume btns
     this.btnPlay = this.add.image(780, 20, 'stop').setOrigin(0.5, 0.5).setDisplaySize(30, 30);
@@ -187,11 +212,12 @@ class Scene2 extends Phaser.Scene {
     });
 
     // fix the text to the camera
-    //this.text.setScrollFactor(0);
+    this.scoreText.setScrollFactor(0);
     this.painText.setScrollFactor(0);
     this.lifeText.setScrollFactor(0);
     this.btnPlay.setScrollFactor(0);
-
+    this.playerName.setScrollFactor(0);
+    this.groupName.setScrollFactor(0);
 
     this.helmet = this.add.image(640, 40, "helmet");
     this.helmet.setVisible(false);
@@ -204,8 +230,6 @@ class Scene2 extends Phaser.Scene {
     this.vest = this.add.image(760, 40, "vest");
     this.vest.setVisible(false);
     this.vest.setScrollFactor(0);
-
-
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -240,29 +264,27 @@ class Scene2 extends Phaser.Scene {
   }
 
   collectCoin(sprite, tile) {
-    this.coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
+    this.coinLayer.removeTileAt(tile.x, tile.y);
     this.coin.play();
-    //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
-
-
+    this.score += 5;
+    this.scoreText.setText("Puntuación: "+this.score);
     return false;
   }
 
   collectHelmet(sprite, tile) {
-    this.helmetLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    this.coin.play();
+    this.helmetLayer.removeTileAt(tile.x, tile.y);
+    this.item.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
     if(this.haveHelmet === false) {
       this.helmet.setVisible(true);
       this.haveHelmet = true;
     }
-
     return false;
   }
 
   collectBoots(sprite, tile) {
-    this.bootsLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    this.coin.play();
+    this.bootsLayer.removeTileAt(tile.x, tile.y);
+    this.item.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
     if(this.haveBoots === false) {
       this.boots.setVisible(true);
@@ -273,7 +295,7 @@ class Scene2 extends Phaser.Scene {
 
   collectVest(sprite, tile) {
     this.vestLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    this.coin.play();
+    this.item.play();
     //this.text.setText(this.armorPoints); // set the text to show the current armorPoints
     if(this.haveVest === false) {
       this.vest.setVisible(true);
@@ -284,7 +306,6 @@ class Scene2 extends Phaser.Scene {
 
   collisionNail(sprite, nail) {
 
-    //
     if(this.haveBoots){ // if you have 1 item
       const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-10)
       this.pain = randompain;
@@ -360,12 +381,8 @@ class Scene2 extends Phaser.Scene {
   update(time, delta) {
     this.timer += delta;
 
-    while (this.timer > 2000) {
-      this.timer -= 2000;
-      /*this.x =
-        this.player.x < 400
-          ? Phaser.Math.Between(400, 800)
-          : Phaser.Math.Between(0, 400);*/
+    while (this.timer > 3000) {
+      this.timer -= 3000;
 
       this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
       this.bomb = this.bombs.create(this.x, 0, "bomb");
@@ -374,35 +391,7 @@ class Scene2 extends Phaser.Scene {
       //this.bomb.setCollideWorldBounds(true);
       this.bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
       this.bomb.allowGravity = false;
-
-      // Dolor a distancia
-      this.damageDist = Phaser.Math.Distance.BetweenPoints(this.player, this.bomb);
-      console.log(this.damageDist);
-
-      /*this.graphic
-      .clear()
-      .strokeCircle(this.player.x, this.player.y, this.damageDist);*/
-
-      if(this.damageDist <= 200) {
-        this.countDistanceDamage++;
-        this.time.addEvent({
-          delay: 2000,
-          callback: ()=>{
-            this.damageBomb();
-            if(this.countDistanceDamage == 1){
-              this.input.keyboard.removeAllKeys(false);
-              this.scene.pause();
-              this.cursors = this.input.keyboard.createCursorKeys();
-              this.scene.launch('SceneMsg2');
-            }
-          },
-          loop: false
-        })
-
-      }
-
     }
-
 
     if(this.life <= 0) {
       this.gameOver = true;
