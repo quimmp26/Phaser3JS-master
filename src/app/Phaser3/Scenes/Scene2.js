@@ -22,8 +22,8 @@ class Scene2 extends Phaser.Scene {
 
     this.load.image("city", "assets/scene2/img/bg_city.png");
 
-    this.load.image("bomb", "assets/scene2/img/bomb.png");
-    this.load.image("nail", "assets/scene2/img/nail2.png");
+    this.load.image("bomb", "assets/scene2/img/totxo.png");
+    this.load.image("nail", "assets/scene2/img/clau.png");
 
     this.load.image('pain', "assets/scene2/img/pain.png");
     this.load.image('life', "assets/scene2/img/life.png");
@@ -391,7 +391,7 @@ class Scene2 extends Phaser.Scene {
       this.timer -= 3000;
 
       this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
-      this.bomb = this.bombs.create(this.x, 0, "bomb");
+      this.bomb = this.bombs.create(this.x, 0, "bomb").setScale(0.5,0.5);
       //this.bomb.setBounce(1);
       this.physics.add.collider(this.groundLayer, this.bomb);
       //this.bomb.setCollideWorldBounds(true);
