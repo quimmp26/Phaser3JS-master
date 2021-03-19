@@ -1,7 +1,3 @@
-import { ThrowStmt } from "@angular/compiler";
-import { chdir } from "process";
-import { isThisTypeNode } from "typescript";
-import Bootloader from "../Bootloader";
 
 class Scene2 extends Phaser.Scene {
   constructor() {
@@ -26,8 +22,11 @@ class Scene2 extends Phaser.Scene {
 
     this.load.image("city", "assets/scene2/img/bg_city.png");
 
-    this.load.image("bomb", "assets/scene2/img/bomb.png");
-    this.load.image("nail", "assets/scene2/img/nail2.png");
+    this.load.image("bomb", "assets/scene2/img/totxo.png");
+    this.load.image("nail", "assets/scene2/img/clau.png");
+
+    this.load.image('pain', "assets/scene2/img/pain.png");
+    this.load.image('life', "assets/scene2/img/life.png");
 
     this.load.image('boots', "assets/scene2/epis/boots.png");
     this.load.image('helmet', "assets/scene2/epis/helmet.png");
@@ -167,21 +166,28 @@ class Scene2 extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
 
     // scoreText
-    this.scoreText = this.add.text(300, 20, "Puntuación: 0", {
+    this.scoreText = this.add.text(270, 26, "Puntuación: 0", {
       fontSize: "20px",
       fill: "#ffffff",
       fontFamily: 'Font1',
     });
+
+
+    this.imgPain = this.add.image(30, 30, 'pain').setDisplaySize(40,48);
+    this.imgPain.setScrollFactor(0);
 
     //Pain points
-    this.painText = this.add.text(20, 20, "Dolor: 0", {
+    this.painText = this.add.text(60, 26, "0", {
       fontSize: "20px",
       fill: "#ffffff",
       fontFamily: 'Font1',
     });
 
+    this.imgLife = this.add.image(130, 35, 'life').setDisplaySize(40,38);
+    this.imgLife.setScrollFactor(0);
+
     //Live points
-    this.lifeText = this.add.text(160, 20, "Vida: 100", {
+    this.lifeText = this.add.text(160, 26, "100", {
       fontSize: "20px",
       fill: "#ffffff",
       fontFamily: 'Font1',
@@ -349,8 +355,8 @@ class Scene2 extends Phaser.Scene {
     }
 
     this.painSound.play();
-    this.lifeText.setText("Vida: "+this.life);
-    this.painText.setText("Dolor: "+this.pain);
+    this.lifeText.setText(this.life);
+    this.painText.setText(this.pain);
     this.player.anims.play("idle", true);
 
     nail.disableBody(true, true);
@@ -386,8 +392,8 @@ class Scene2 extends Phaser.Scene {
     }
 
     this.painSound.play();
-    this.lifeText.setText("Vida: "+this.life);
-    this.painText.setText("Dolor: "+this.pain);
+    this.lifeText.setText(this.life);
+    this.painText.setText(this.pain);
     this.player.anims.play("idle", true);
     // this.bombs.children.iterate(function(child){
     //  this.bombs.remove(child, true);
@@ -423,7 +429,7 @@ class Scene2 extends Phaser.Scene {
         null,
         this
         );
-      this.bomb = this.bombs.create(this.x, 0, "bomb");
+      this.bomb = this.bombs.create(this.x, 0, "bomb").setScale(0.5,0.5);
       //this.bomb.setBounce(1);
 
       //this.bomb.setCollideWorldBounds(true);
@@ -485,6 +491,11 @@ class Scene2 extends Phaser.Scene {
     // jump
     if (this.cursors.up.isDown && this.player.body.onFloor()) {
       this.player.body.setVelocityY(-600); //500
+    }
+
+
+    if(this.player.x >= 5170 && this.haveBoots == true && this.haveVest == true && this.haveHelmet == true){ //5170
+      this.scene.start('EndScene', {player: this.name, group: this.group, points: this.score, life: this.life, pain: this.pain});
     }
 
 
