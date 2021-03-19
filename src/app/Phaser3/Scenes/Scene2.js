@@ -358,7 +358,7 @@ class Scene2 extends Phaser.Scene {
     console.log("nail collisioned!");
   }
 
-  damageBomb(sprite, tile) {
+  damageBomb(sprite, bomb) {
     this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
     if(this.haveHelmet == true){ // if you have 1 item
@@ -389,9 +389,10 @@ class Scene2 extends Phaser.Scene {
     this.lifeText.setText("Vida: "+this.life);
     this.painText.setText("Dolor: "+this.pain);
     this.player.anims.play("idle", true);
-    this.bombs.children.iterate(function(child){
-     this.bombs.remove(child, true);
-    }, this);
+    // this.bombs.children.iterate(function(child){
+    //  this.bombs.remove(child, true);
+    // }, this);
+    this.bombs.remove(bomb, true);
 
     //Show message
     if(this.countBombs == 1) {
@@ -413,9 +414,18 @@ class Scene2 extends Phaser.Scene {
       this.timer -= 3000;
 
       this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
+      this.physics.add.collider(
+        this.groundLayer,
+        this.bomb,
+        (sprite, boom) => {
+          this.bombs.remove(boom, true, true);
+        },
+        null,
+        this
+        );
       this.bomb = this.bombs.create(this.x, 0, "bomb");
       //this.bomb.setBounce(1);
-      this.physics.add.collider(this.groundLayer, this.bomb);
+
       //this.bomb.setCollideWorldBounds(true);
       this.bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
       this.bomb.allowGravity = false;
