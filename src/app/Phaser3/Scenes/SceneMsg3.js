@@ -1,6 +1,6 @@
-class SceneMsg2 extends Phaser.Scene {
+class SceneMsg3 extends Phaser.Scene {
   constructor() {
-    super("SceneMsg2");
+    super("SceneMsg3");
   }
 
   preload() {
@@ -12,13 +12,13 @@ class SceneMsg2 extends Phaser.Scene {
 
     //this.info = this.add.image(400, 300, 'info2').setOrigin(0.5, 0.5).setScale(0.5);
 
-    this.text = this.add.text(17, 270, 'Esto te ha dolido muchísimo, ¿verdad? Da la impresión de que el clavo haya atravesado tu pie, ¡pero en realidad solo te ha rozado! Lo que ha pasado es que has percibido dolor ante un estímulo normalmente no doloroso… ¿Sabes cómo se llama este fenómeno? ALODINIA.', {
+    this.text = this.add.text(17, 270, 'Qué estrés estoy teniendo…Esto duele cada vez más.¿Sabías que la amígdala es el área cerebral relevante involucrada en los mecanismos cerebrales relacionados con las emociones, el estrés o la ansiedad y también es parte del sistema modulador descendente del dolor? Además, contribuye notablemente en respuestas como el miedo y la ansiedad relacionadas con la experiencia del dolor.', {
       fontSize: "20px",
       fill: "#ffff00",
       fontFamily: 'Font1',
       align: 'center',
       wordWrap: {
-        width: 650,
+        width: 700,
       },
       padding: {
         x: 50,
@@ -40,4 +40,4 @@ class SceneMsg2 extends Phaser.Scene {
   }
 }
 
-export default SceneMsg2;
+export default SceneMsg3;

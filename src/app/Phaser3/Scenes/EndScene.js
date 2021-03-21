@@ -11,7 +11,6 @@ class EndScene extends Phaser.Scene {
 
   }
 
-
   init(data) {
     this.name = data.player;
     this.group = data.group;
@@ -71,7 +70,7 @@ class EndScene extends Phaser.Scene {
     //Team name
     this.add.text(50, 130, this.group, {
       fontSize: "37px",
-      fill: "#ff0000",
+      fill: "#ffff00",
       fontFamily: 'Font1',
     }).setDepth(1);
 
