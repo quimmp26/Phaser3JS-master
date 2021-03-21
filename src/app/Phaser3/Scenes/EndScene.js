@@ -82,7 +82,9 @@ class EndScene extends Phaser.Scene {
 
 
   update(time, delta) {
-
+    if(time >= 10000){
+      this.scene.start('CreditsScene');
+    }
   }
 }
 

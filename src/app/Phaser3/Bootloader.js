@@ -12,7 +12,7 @@ class Bootloader extends Phaser.Scene {
     this.add.text(20, 20, "Loading game...");
 
     setTimeout(() => {
-      this.scene.start('ConfigScene');
+      this.scene.start('EndScene');
 
     }, 2000);
   }

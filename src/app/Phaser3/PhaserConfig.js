@@ -8,6 +8,7 @@ import PauseScene from './Scenes/PauseScene';
 import EndScene from './Scenes/EndScene';
 import SceneMsg3 from './Scenes/SceneMsg3';
 import IntroScene from './Scenes/IntroScene';
+import CreditsScene from './Scenes/CreditsScene';
 
 var config = {
   type: Phaser.AUTO,
@@ -25,7 +26,7 @@ var config = {
           debug: false
       }
   },
-  scene: [ Bootloader, MainScene, Scene2, SceneMsg1, SceneMsg2, SceneMsg3, ConfigScene, PauseScene, EndScene, IntroScene]
+  scene: [ Bootloader, MainScene, Scene2, SceneMsg1, SceneMsg2, SceneMsg3, ConfigScene, PauseScene, EndScene, IntroScene, CreditsScene]
 };
 
 var game = new Phaser.Game(config);
