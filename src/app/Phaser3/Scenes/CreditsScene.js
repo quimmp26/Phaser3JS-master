@@ -12,8 +12,9 @@ class CreditsScene extends Phaser.Scene {
   create() {
 
     this.form = this.add.dom(400, 0).createFromCache('credits').setOrigin(0);
-    this.form.setPerspective(800);
-    this.form.addListener('click');
+
+    /*this.form.setPerspective(800);
+    this.form.addListener('click');*/
 
 
     /*this.form.on('click', function(event) {
@@ -35,7 +36,9 @@ class CreditsScene extends Phaser.Scene {
 
 
   update(time, delta) {
-
+    if(time >= 22000) {
+      this.scene.start('ConfigScene');
+    }
   }
 }
 

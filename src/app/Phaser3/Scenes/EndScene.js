@@ -26,6 +26,8 @@ class EndScene extends Phaser.Scene {
 
     this.load.image('pain', "assets/scene2/img/pain.png");
     this.load.image('life', "assets/scene2/img/life.png");
+
+    this.load.image("play", "assets/scene2/img/play.png");
   }
 
   create() {
@@ -78,13 +80,17 @@ class EndScene extends Phaser.Scene {
     this.add.image(0, 0, "bg").setOrigin(0).setDepth(0);
     this.add.image(0, 200, "character").setOrigin(0);
 
+    this.btnPlay = this.add.image(400, 100, 'play').setOrigin(0.5, 0.5).setDisplaySize(60, 60);
+    this.btnPlay.setInteractive();
+    this.btnPlay.on('pointerdown', () => {
+      this.scene.start('CreditsScene');
+    });
+
   }
 
 
   update(time, delta) {
-    if(time >= 10000){
-      this.scene.start('CreditsScene');
-    }
+
   }
 }
 

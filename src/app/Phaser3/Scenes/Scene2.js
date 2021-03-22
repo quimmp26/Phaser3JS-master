@@ -395,8 +395,8 @@ class Scene2 extends Phaser.Scene {
   update(time, delta) {
     this.timer += delta;
 
-    while (this.timer > 3000) {
-      this.timer -= 3000;
+    while (this.timer > 4000) {
+      this.timer -= 4000;
 
       this.x = Phaser.Math.Between(this.player.x - 400, this.player.x + 400);
       this.bomb = this.bombs.create(this.x, 0, "bomb").setScale(0.5,0.5);
