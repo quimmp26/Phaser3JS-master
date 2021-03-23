@@ -16,6 +16,8 @@ class ConfigScene extends Phaser.Scene {
 
   create() {
 
+    sceneOK = false;
+
     this.add.text(50, 20, "CHOOSE YOUR CHARACTER ", {
       fontSize: "40px",
       fill: "#000000",

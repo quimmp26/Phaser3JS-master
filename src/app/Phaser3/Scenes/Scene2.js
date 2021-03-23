@@ -335,7 +335,7 @@ class Scene2 extends Phaser.Scene {
     //this.item.play();
     if(this.pain > 9) {
       this.pain = this.pain - 10;
-      this.painText.setText("Dolor: "+this.pain);
+      this.painText.setText(this.pain);
     }
     painkiller.disableBody(true, true);
 

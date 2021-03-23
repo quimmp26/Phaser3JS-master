@@ -1,3 +1,4 @@
+import { TimeoutError } from "rxjs";
 
 class CreditsScene extends Phaser.Scene {
 
@@ -10,6 +11,8 @@ class CreditsScene extends Phaser.Scene {
   }
 
   create() {
+
+    this.timer = this.time.now;
 
     this.form = this.add.dom(400, 0).createFromCache('credits').setOrigin(0);
 
@@ -36,9 +39,10 @@ class CreditsScene extends Phaser.Scene {
 
 
   update(time, delta) {
-    if(time >= 22000) {
-      this.scene.start('ConfigScene');
+    if(time >= this.timer + 20000) {
+      this.scene.start('Bootloader');
     }
+
   }
 }
 
