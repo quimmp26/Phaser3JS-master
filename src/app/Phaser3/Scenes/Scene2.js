@@ -5,7 +5,7 @@ class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map", "assets/scene2/json/Map5.json");
+    this.load.tilemapTiledJSON("map", "assets/scene2/json/Map6.json");
     this.load.spritesheet("platforms", "assets/scene2/img/platforms.png", {
       frameWidth: 70,
       frameHeight: 70,
@@ -55,9 +55,8 @@ class Scene2 extends Phaser.Scene {
 
     //IMPLEMENTAR 4 MISATGES AMB CONTADOR 1
     this.countBombs = 0;
-    this.countBombsWithHelmet = 0;
     this.countNails = 0;
-    this.countNailsWithBoots = 0;
+    this.painMsg = false;
 
     this.haveHelmet = false;
     this.haveBoots = false;
@@ -168,7 +167,7 @@ class Scene2 extends Phaser.Scene {
     // scoreText
     this.scoreText = this.add.text(270, 26, "Puntuación: 0", {
       fontSize: "20px",
-      fill: "#ffffff",
+      fill: "#ffff00",
       fontFamily: 'Font1',
     });
 
@@ -203,7 +202,7 @@ class Scene2 extends Phaser.Scene {
     //Team name
     this.groupName = this.add.text(600, 570, this.group, {
       fontSize: "20px",
-      fill: "#ff0000",
+      fill: "#ffff00",
       fontFamily: 'Font1',
     });
 
@@ -258,6 +257,7 @@ class Scene2 extends Phaser.Scene {
       this
     );
 
+
     this.painkillers = this.physics.add.group();
     this.physics.add.collider(
       this.player,
@@ -275,13 +275,16 @@ class Scene2 extends Phaser.Scene {
       console.log(i);
     }
 
-    for(var i = 0; i < 20; i++) {
+
+    for(var i = 0; i < 15; i++) {
       const xspawn = Math.floor(Math.random()*(5100));
       this.nail = this.nails.create(xspawn, 50, "nail")
       this.nail.setScale(0.3, 0.3);
       this.physics.add.collider(this.groundLayer, this.nail);
       console.log(i);
     }
+
+    //this.scene.start('IntroScene');
 
     this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
 
@@ -339,6 +342,7 @@ class Scene2 extends Phaser.Scene {
   }
 
   collisionNail(sprite, nail) {
+    this.countNails ++;
 
     if(this.haveBoots){ // if you have 1 item
       const randompain = this.pain + (Math.floor(Math.random()*(10))); //random value range(0-10)
@@ -361,7 +365,13 @@ class Scene2 extends Phaser.Scene {
 
     nail.disableBody(true, true);
 
-    console.log("nail collisioned!");
+    if(this.countNails == 1) {
+      this.input.keyboard.removeAllKeys(false);
+      this.scene.pause();
+      this.cursors = this.input.keyboard.createCursorKeys();
+      this.scene.launch('SceneMsg2');
+    }
+
   }
 
   damageBomb(sprite, bomb) {
@@ -416,10 +426,11 @@ class Scene2 extends Phaser.Scene {
   update(time, delta) {
     this.timer += delta;
 
-    while (this.timer > 3000) {
-      this.timer -= 3000;
+    while (this.timer > 4000) {
+      this.timer -= 4000;
 
-      this.x = Phaser.Math.Between(this.player.x - 300, this.player.x + 300);
+
+      this.x = Phaser.Math.Between(this.player.x - 400, this.player.x + 400);
       this.physics.add.collider(
         this.groundLayer,
         this.bomb,
@@ -429,6 +440,8 @@ class Scene2 extends Phaser.Scene {
         null,
         this
         );
+
+
       this.bomb = this.bombs.create(this.x, 0, "bomb").setScale(0.5,0.5);
       //this.bomb.setBounce(1);
 
@@ -455,6 +468,13 @@ class Scene2 extends Phaser.Scene {
         },
         loop: false
       })
+    }
+
+
+    if(this.pain > 80 && this.pain < 100 && this.painMsg == false){
+      this.painMsg = true;
+      this.scene.pause();
+      this.scene.launch('SceneMsg3');
     }
 
     if(this.pain >= 100) {

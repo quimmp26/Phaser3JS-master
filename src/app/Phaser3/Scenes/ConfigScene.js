@@ -55,7 +55,7 @@ class ConfigScene extends Phaser.Scene {
 
   update(time, delta) {
     if(sceneOK == true){
-      this.scene.start('Scene2', {player: name.value, group: group.value});
+      this.scene.start('IntroScene', {player: name.value, group: group.value});
     }
   }
 }

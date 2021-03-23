@@ -11,7 +11,6 @@ class EndScene extends Phaser.Scene {
 
   }
 
-
   init(data) {
     this.name = data.player;
     this.group = data.group;
@@ -27,6 +26,8 @@ class EndScene extends Phaser.Scene {
 
     this.load.image('pain', "assets/scene2/img/pain.png");
     this.load.image('life', "assets/scene2/img/life.png");
+
+    this.load.image("play", "assets/scene2/img/play.png");
   }
 
   create() {
@@ -71,13 +72,19 @@ class EndScene extends Phaser.Scene {
     //Team name
     this.add.text(50, 130, this.group, {
       fontSize: "37px",
-      fill: "#ff0000",
+      fill: "#ffff00",
       fontFamily: 'Font1',
     }).setDepth(1);
 
 
     this.add.image(0, 0, "bg").setOrigin(0).setDepth(0);
     this.add.image(0, 200, "character").setOrigin(0);
+
+    this.btnPlay = this.add.image(400, 100, 'play').setOrigin(0.5, 0.5).setDisplaySize(60, 60);
+    this.btnPlay.setInteractive();
+    this.btnPlay.on('pointerdown', () => {
+      this.scene.start('CreditsScene');
+    });
 
   }
 
