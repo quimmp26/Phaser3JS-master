@@ -31,6 +31,7 @@ class Scene2 extends Phaser.Scene {
     this.load.image('boots', "assets/scene2/epis/boots.png");
     this.load.image('helmet', "assets/scene2/epis/helmet.png");
     this.load.image('vest', "assets/scene2/epis/vest.png");
+    this.load.image("painkiller", "assets/scene2/img/painkiller.png");
 
     this.load.audio("music", "assets/scene2/sounds/gamemusic.mp3");
     this.load.audio("coin", "assets/scene2/sounds/coin.mp3");
@@ -256,6 +257,25 @@ class Scene2 extends Phaser.Scene {
       this
     );
 
+
+    this.painkillers = this.physics.add.group();
+    this.physics.add.collider(
+      this.player,
+      this.painkillers,
+      this.collectPainkiller,
+      null,
+      this
+    );
+
+    for(var i = 0; i < 5; i++) {
+      const xspawn = Math.floor(Math.random()*(5100));
+      this.painkiller = this.painkillers.create(xspawn, 50, "painkiller")
+      this.painkiller.setScale(0.08, 0.08);
+      this.physics.add.collider(this.groundLayer, this.painkiller);
+      console.log(i);
+    }
+
+
     for(var i = 0; i < 15; i++) {
       const xspawn = Math.floor(Math.random()*(5100));
       this.nail = this.nails.create(xspawn, 50, "nail")
@@ -311,6 +331,16 @@ class Scene2 extends Phaser.Scene {
     return false;
   }
 
+  collectPainkiller(sprite, painkiller) {
+    //this.item.play();
+    if(this.pain > 9) {
+      this.pain = this.pain - 10;
+      this.painText.setText("Dolor: "+this.pain);
+    }
+    painkiller.disableBody(true, true);
+
+  }
+
   collisionNail(sprite, nail) {
     this.countNails ++;
 
@@ -344,7 +374,7 @@ class Scene2 extends Phaser.Scene {
 
   }
 
-  damageBomb(sprite, tile) {
+  damageBomb(sprite, bomb) {
     this.countBombs ++;
     //this.coinLayer.removeTileAt(tile.x, tile.y);
     if(this.haveHelmet == true){ // if you have 1 item
@@ -375,9 +405,10 @@ class Scene2 extends Phaser.Scene {
     this.lifeText.setText(this.life);
     this.painText.setText(this.pain);
     this.player.anims.play("idle", true);
-    this.bombs.children.iterate(function(child){
-     this.bombs.remove(child, true);
-    }, this);
+    // this.bombs.children.iterate(function(child){
+    //  this.bombs.remove(child, true);
+    // }, this);
+    this.bombs.remove(bomb, true);
 
     //Show message
     if(this.countBombs == 1) {
@@ -398,10 +429,22 @@ class Scene2 extends Phaser.Scene {
     while (this.timer > 4000) {
       this.timer -= 4000;
 
+
       this.x = Phaser.Math.Between(this.player.x - 400, this.player.x + 400);
+      this.physics.add.collider(
+        this.groundLayer,
+        this.bomb,
+        (sprite, boom) => {
+          this.bombs.remove(boom, true, true);
+        },
+        null,
+        this
+        );
+
+
       this.bomb = this.bombs.create(this.x, 0, "bomb").setScale(0.5,0.5);
       //this.bomb.setBounce(1);
-      this.physics.add.collider(this.groundLayer, this.bomb);
+
       //this.bomb.setCollideWorldBounds(true);
       this.bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
       this.bomb.allowGravity = false;
