@@ -6,16 +6,19 @@ class SceneMsg2 extends Phaser.Scene {
   preload() {
    // this.load.image("info2", "assets/scene2/img/info2.jpg");
     this.load.image("play", "assets/scene2/img/play.png");
+    this.load.image("msg", "assets/fondo-obrero.png");
   }
 
   create(){
 
-    //this.info = this.add.image(400, 300, 'info2').setOrigin(0.5, 0.5).setScale(0.5);
+    this.msg = this.add.image(0, 0, 'msg').setOrigin(0);
 
     this.text = this.add.text(17, 270, 'Esto te ha dolido muchísimo, ¿verdad? Da la impresión de que el clavo haya atravesado tu pie, ¡pero en realidad solo te ha rozado! Lo que ha pasado es que has percibido dolor ante un estímulo normalmente no doloroso… ¿Sabes cómo se llama este fenómeno? ALODINIA.', {
       fontSize: "20px",
-      fill: "#ffff00",
+      fill: "#000000",
       fontFamily: 'Font1',
+      stroke: '#ffff00',
+      strokeThickness: 4,
       align: 'center',
       wordWrap: {
         width: 650,
@@ -32,6 +35,7 @@ class SceneMsg2 extends Phaser.Scene {
       this.scene.resume('Scene2');
       this.text.setVisible(false);
       this.btnPlay.setVisible(false);
+      this.msg.setVisible(false);
     });
   }
 
