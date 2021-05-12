@@ -31,7 +31,7 @@ class Scene2 extends Phaser.Scene {
     this.load.image('boots', "assets/scene2/epis/boots.png");
     this.load.image('helmet', "assets/scene2/epis/helmet.png");
     this.load.image('vest', "assets/scene2/epis/vest.png");
-    this.load.image("painkiller", "assets/scene2/img/painkiller.png");
+    this.load.image("painkiller", "assets/scene2/img/pastilla.png");
 
     this.load.audio("music", "assets/scene2/sounds/gamemusic.mp3");
     this.load.audio("coin", "assets/scene2/sounds/coin.mp3");
@@ -270,7 +270,7 @@ class Scene2 extends Phaser.Scene {
     for(var i = 0; i < 5; i++) {
       const xspawn = Math.floor(Math.random()*(5100));
       this.painkiller = this.painkillers.create(xspawn, 50, "painkiller")
-      this.painkiller.setScale(0.08, 0.08);
+      this.painkiller.setScale(0.1, 0.1);
       this.physics.add.collider(this.groundLayer, this.painkiller);
       console.log(i);
     }
